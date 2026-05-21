@@ -20,6 +20,176 @@
 
 <img src="000.png">
 
+**실제 산업 현장에서는:**
+```
+기구 도면(CAD)
+→ 좌표계 정의
+→ DH Parameter
+→ URDF 생성
+```
+* 순서로 진행합니다.
+* Joint 위치, 회전축, 링크 길이, 좌표계 방향이 정의되어 있기 때문에 URDF 생성에 필요한 핵심 정보가 거의 들어있습니다.
+
+
+**1. 현재 그림으로 가능한 것**
+
+   * 현재 정보만으로도:
+      * Link 구조
+      * Joint Tree
+      * Joint Axis
+      * Origin 위치
+      * FK/IK 테스트용 URDF
+   * 는 충분히 만들 수 있습니다.
+   * 즉:
+      * MoveIt
+      * RViz
+      * Gazebo
+      * Isaac Sim
+   * 에서 동작하는 기본 모델 생성 가능.
+
+**2. 추가로 필요한 정보**
+
+* 실제 정밀 URDF에는 다음이 추가 필요합니다.
+
+| 항목 | 	필요 |  이유 | 
+|:-------:| :-------:|:-------:|
+| STL/STEP/DAE Mesh	| 3D 외형 | 
+| 정확한 Joint Limit	| 회전 범위 | 
+| 질량(Mass)	| Dynamics | 
+| Inertia Tensor	| 물리 시뮬레이션 | 
+| CoM	| 무게 중심 | 
+| TCP 정의| 	Tool 기준 | 
+
+3. URDF 기본 구조
+
+URDF는 이런 형태입니다.
+
+<robot name="rb10">
+
+    <link name="base_link"/>
+
+    <joint name="joint1" type="revolute">
+        <parent link="base_link"/>
+        <child link="link1"/>
+
+        <origin xyz="0 0 0.197"
+                rpy="0 0 0"/>
+
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <link name="link1"/>
+
+</robot>
+4. 그림에서 무엇을 읽어내는가?
+
+예를 들어:
+
+612.7 mm
+
+↓
+
+<origin xyz="0 0 0.6127"/>
+
+그리고:
+
+파란 Z축
+
+↓
+
+<axis xyz="0 0 1"/>
+5. 실제 생성 흐름
+
+실제 개발 흐름:
+
+CAD
+ ↓
+STEP/STL 추출
+ ↓
+좌표계 설정
+ ↓
+URDF 생성
+ ↓
+RViz 검증
+ ↓
+MoveIt IK 설정
+ ↓
+Isaac Sim Import
+
+입니다.
+
+6. ROS2에서 매우 중요
+
+URDF가 있으면 자동으로:
+
+TF Tree
+Robot State Publisher
+RViz Robot Model
+MoveIt Planning
+IK Solver
+
+가 연결됩니다.
+
+7. 지금 그림 기준으로 가능한 수준
+
+현재 정보로 만들 수 있는 것:
+
+기능	가능 여부
+기본 URDF	가능
+RViz 표시	가능
+FK	가능
+IK	가능
+MoveIt	가능
+Isaac Sim Import	가능
+Gazebo Physics	일부 가능
+정확한 Dynamics	추가 정보 필요
+8. 실제로 가장 많이 하는 방식
+
+보통은:
+
+SolidWorks
+Fusion360
+Inventor
+Creo
+
+에서:
+
+URDF Export Plugin
+
+을 사용합니다.
+
+하지만:
+
+좌표계가 틀리면 전부 망가짐
+
+그래서 결국 지금 같은 좌표계 검증 작업이 가장 중요합니다.
+
+9. 지금 바로도 가능한 것
+
+현재 그림 기반으로:
+
+URDF
+Xacro
+ROS2 package
+TF Tree
+RViz launch
+MoveIt config
+
+까지 생성 가능합니다.
+
+10. 특히 중요한 부분
+
+URDF 생성에서 가장 어려운 부분은:
+
+Joint Origin
+Joint Axis
+
+입니다.
+
+지금 그림은 바로 그걸 설명하는 자료입니다.
+
+---
+
 ## 1. 전체 구조
 
 그림의 핵심 구조는 다음과 같습니다:
