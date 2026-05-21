@@ -303,3 +303,350 @@ Isaac Sim
 - ✅ ROS2
 - ✅ MoveIt
 - ✅ Isaac Sim
+
+---
+
+# 부록: URDF 생성 실용 가이드
+
+> 이 정보를 가지고 직접 URDF 파일을 만들 수 있을까?
+>
+> **가능합니다.** 오히려 실제 산업 현장에서는:
+>
+> **기구 도면(CAD) → 좌표계 정의 → DH Parameter → URDF 생성**
+>
+> 순서로 진행합니다.
+>
+> 지금까지 다룬 그림에는 **Joint 위치, 회전축, 링크 길이, 좌표계 방향**이 이미 정의되어 있기 때문에 URDF 생성에 필요한 핵심 정보가 거의 들어있습니다.
+>
+> 다만 실제로 "정확한" URDF를 만들려면 추가 정보가 조금 더 필요합니다.
+
+---
+
+## 부록 1. 현재 그림으로 가능한 것
+
+현재 정보만으로도 다음은 충분히 만들 수 있습니다:
+
+- Link 구조
+- Joint Tree
+- Joint Axis
+- Origin 위치
+- FK/IK 테스트용 URDF
+
+즉, **MoveIt, RViz, Gazebo, Isaac Sim**에서 동작하는 기본 모델 생성이 가능합니다.
+
+---
+
+## 부록 2. 추가로 필요한 정보
+
+실제 정밀 URDF에는 다음이 추가로 필요합니다:
+
+| 항목 | 필요 이유 |
+|------|----------|
+| STL / STEP / DAE Mesh | 3D 외형 |
+| 정확한 Joint Limit | 회전 범위 |
+| 질량 (Mass) | Dynamics |
+| Inertia Tensor | 물리 시뮬레이션 |
+| CoM (Center of Mass) | 무게 중심 |
+| TCP 정의 | Tool 기준 |
+
+---
+
+## 부록 3. URDF 기본 구조
+
+URDF는 다음과 같은 형태입니다:
+
+```xml
+<robot name="rb10">
+
+    <link name="base_link"/>
+
+    <joint name="joint1" type="revolute">
+        <parent link="base_link"/>
+        <child link="link1"/>
+        <origin xyz="0 0 0.197"
+                rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <link name="link1"/>
+
+</robot>
+```
+
+---
+
+## 부록 4. 그림에서 무엇을 읽어내는가?
+
+예를 들어 `612.7 mm`는 다음과 같이 변환됩니다:
+
+```xml
+<origin xyz="0 0 0.6127"/>
+```
+
+그리고 파란 Z축은 다음과 같이 변환됩니다:
+
+```xml
+<axis xyz="0 0 1"/>
+```
+
+---
+
+## 부록 5. 실제 생성 흐름
+
+실제 개발 흐름:
+
+```
+CAD
+ ↓
+STEP / STL 추출
+ ↓
+좌표계 설정
+ ↓
+URDF 생성
+ ↓
+RViz 검증
+ ↓
+MoveIt IK 설정
+ ↓
+Isaac Sim Import
+```
+
+---
+
+## 부록 6. ROS2에서의 중요성
+
+URDF가 있으면 자동으로 다음이 연결됩니다:
+
+- TF Tree
+- Robot State Publisher
+- RViz Robot Model
+- MoveIt Planning
+- IK Solver
+
+---
+
+## 부록 7. 지금 그림 기준으로 가능한 수준
+
+| 기능 | 가능 여부 |
+|------|----------|
+| 기본 URDF | ✅ 가능 |
+| RViz 표시 | ✅ 가능 |
+| FK | ✅ 가능 |
+| IK | ✅ 가능 |
+| MoveIt | ✅ 가능 |
+| Isaac Sim Import | ✅ 가능 |
+| Gazebo Physics | ⚠️ 일부 가능 |
+| 정확한 Dynamics | ❌ 추가 정보 필요 |
+
+---
+
+## 부록 8. 실제로 가장 많이 하는 방식
+
+보통 SolidWorks, Fusion360, Inventor, Creo 등의 CAD 툴에서 **URDF Export Plugin**을 사용합니다.
+
+하지만 **좌표계가 틀리면 전부 망가집니다.**
+그래서 결국 지금 같은 좌표계 검증 작업이 가장 중요합니다.
+
+---
+
+## 부록 9. 지금 바로도 가능한 것
+
+현재 그림 기반으로 다음까지 생성 가능합니다:
+
+- URDF
+- Xacro
+- ROS2 package
+- TF Tree
+- RViz launch
+- MoveIt config
+
+---
+
+## 부록 10. 특히 중요한 부분
+
+URDF 생성에서 가장 어려운 부분은 **Joint Origin**과 **Joint Axis**입니다.
+지금 그림은 바로 그걸 설명하는 자료입니다.
+
+---
+
+## 부록 11. 원하면 다음 단계도 가능
+
+지금 상태에서 바로 다음도 가능합니다:
+
+1. RB10용 실제 URDF 생성
+2. Xacro 구조화
+3. ROS2 package 생성
+4. RViz 실행 파일 생성
+5. MoveIt2 설정
+6. Isaac Sim Import
+7. FK/IK Python 코드 생성
+8. DH Parameter 표 생성
+9. TF Tree 시각화
+10. Gazebo 시뮬레이션
+
+---
+
+# RB10-1300E URDF 예제
+
+> 제공된 좌표계 그림을 기반으로 만든 **교육용/실습용 URDF 예제**입니다.
+>
+> **주의**: 실제 제조사 CAD 및 DH Parameter와 완전히 동일하지 않을 수 있습니다.
+> FK/IK/TF 학습용 기준이며, 실제 제품 적용 시 제조사 데이터 기반 보정이 필요합니다.
+
+---
+
+## 폴더 구조
+
+```
+rb10_description/
+ ├── urdf/
+ │    └── rb10.urdf
+ ├── meshes/
+ │    ├── base.stl
+ │    ├── link1.stl
+ │    ├── link2.stl
+ │    ├── link3.stl
+ │    ├── link4.stl
+ │    ├── link5.stl
+ │    └── link6.stl
+ ├── launch/
+ │    └── display.launch.py
+ └── rviz/
+      └── robot.rviz
+```
+
+---
+
+## RB10 URDF 예제
+
+**파일**: `urdf/rb10.urdf`
+
+```xml
+<?xml version="1.0"?>
+<robot name="rb10">
+
+    <!-- ====================================================== -->
+    <!-- COLORS / MATERIALS -->
+    <!-- ====================================================== -->
+    <material name="black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+    </material>
+
+    <material name="white">
+        <color rgba="0.9 0.9 0.9 1.0"/>
+    </material>
+
+    <!-- ====================================================== -->
+    <!-- BASE LINK -->
+    <!-- ====================================================== -->
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.3 0.3 0.05"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <!-- ====================================================== -->
+    <!-- JOINT0 : BASE JOINT -->
+    <!-- ====================================================== -->
+    <joint name="joint0" type="revolute">
+        <parent link="base_link"/>
+        <child link="link1"/>
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit
+            lower="-3.14"
+            upper="3.14"
+            effort="30"
+            velocity="3.0"/>
+    </joint>
+
+    <!-- ====================================================== -->
+    <!-- LINK1 -->
+    <!-- ====================================================== -->
+    <link name="link1">
+        <visual>
+            <origin xyz="0 0 0.3085" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.617"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+    </link>
+
+    <!-- ====================================================== -->
+    <!-- JOINT1 : SHOULDER -->
+    <!-- ====================================================== -->
+    <joint name="joint1" type="revolute">
+        <parent link="link1"/>
+        <child link="link2"/>
+        <origin xyz="0 0 0.6127" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit
+            lower="-3.14"
+            upper="3.14"
+            effort="30"
+            velocity="3.0"/>
+    </joint>
+
+    <!-- ====================================================== -->
+    <!-- LINK2 : UPPER ARM -->
+    <!-- ====================================================== -->
+    <link name="link2">
+        <visual>
+            <origin xyz="0 0 0.285" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.57"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+    </link>
+
+    <!-- ====================================================== -->
+    <!-- JOINT2 : ELBOW -->
+    <!-- ====================================================== -->
+    <joint name="joint2" type="revolute">
+        <parent link="link2"/>
+        <child link="link3"/>
+        <origin xyz="0 0 0.57015" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit
+            lower="-3.14"
+            upper="3.14"
+            effort="30"
+            velocity="3.0"/>
+    </joint>
+
+    <!-- ====================================================== -->
+    <!-- LINK3 -->
+    <!-- ====================================================== -->
+    <link name="link3">
+        <visual>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.1"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+    </link>
+
+    <!-- ====================================================== -->
+    <!-- JOINT3 -->
+    <!-- ====================================================== -->
+    <joint name="joint3" type="revolute">
+        <parent link="link3"/>
+        <child link="link4"/>
+        <origin xyz="0 0 0.1" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit
+            lower="-3.14"
+            upper="3.14"
+            effort="30"
+            velocity="3.0"/>
+    </joint>
+
+    <!-- ====================================================== -->
+    <!-- LINK4 -->
