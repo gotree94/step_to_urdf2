@@ -16,7 +16,7 @@ CAD 파일(STEP)을 로봇 기술용 URDF 포맷으로 변환하는 **4가지 �
 ## 방법별 특징 비교
 
 | 항목 | FreeCAD + CROSS | FreeCAD → DAE + 수동 | Blender + PHOBOS | urdf-from-step |
-|:---:|---|---|---|---|
+|:---:|:---:|:---:|:---:|:---:|
 | **라이선스 <br> 제약** | ❌ 없음 | ❌ 없음 | ❌ 없음 | ❌ 없음 |
 | **메시 포맷** | DAE (권장), STL | DAE | DAE, OBJ, STL | STL |
 | **메시 품질 <br> 제어** | Tessellation <br> 파라미터 직접 설정 | Tessellation <br> 파라미터 직접 설정 | Blender <br> 리토폴로지/법선 편집 가능 | OCCT 기본 <br> tessellation |
