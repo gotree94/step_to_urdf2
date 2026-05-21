@@ -650,3 +650,237 @@ rb10_description/
 
     <!-- ====================================================== -->
     <!-- LINK4 -->
+    <!-- ====================================================== -->
+    <link name="link4">
+        <visual>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.04" length="0.1"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+    </link>
+
+    <!-- ====================================================== -->
+    <!-- JOINT4 -->
+    <!-- ====================================================== -->
+    <joint name="joint4" type="revolute">
+        <parent link="link4"/>
+        <child link="link5"/>
+        <origin xyz="0 0 0.1" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit
+            lower="-3.14"
+            upper="3.14"
+            effort="30"
+            velocity="3.0"/>
+    </joint>
+
+    <!-- ====================================================== -->
+    <!-- LINK5 -->
+    <!-- ====================================================== -->
+    <link name="link5">
+        <visual>
+            <origin xyz="0 0 0.088575" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.04" length="0.17715"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+    </link>
+
+    <!-- ====================================================== -->
+    <!-- JOINT5 -->
+    <!-- ====================================================== -->
+    <joint name="joint5" type="revolute">
+        <parent link="link5"/>
+        <child link="link6"/>
+        <origin xyz="0 0 0.17715" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit
+            lower="-3.14"
+            upper="3.14"
+            effort="30"
+            velocity="3.0"/>
+    </joint>
+
+    <!-- ====================================================== -->
+    <!-- LINK6 -->
+    <!-- ====================================================== -->
+    <link name="link6">
+        <visual>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.03" length="0.1"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+    </link>
+
+    <!-- ====================================================== -->
+    <!-- JOINT6 -->
+    <!-- ====================================================== -->
+    <joint name="joint6" type="revolute">
+        <parent link="link6"/>
+        <child link="tool0"/>
+        <origin xyz="0 0 0.1" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit
+            lower="-3.14"
+            upper="3.14"
+            effort="30"
+            velocity="3.0"/>
+    </joint>
+
+    <!-- ====================================================== -->
+    <!-- TOOL LINK -->
+    <!-- ====================================================== -->
+    <link name="tool0">
+        <visual>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <sphere radius="0.03"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+    </link>
+
+    <!-- ====================================================== -->
+    <!-- TOOL JOINT -->
+    <!-- ====================================================== -->
+    <joint name="tool_joint" type="fixed">
+        <parent link="link6"/>
+        <child link="tool0"/>
+        <origin xyz="0 0 0.1153" rpy="0 0 0"/>
+    </joint>
+
+</robot>
+```
+
+---
+
+## RViz 실행
+
+**robot_state_publisher 설치:**
+
+```bash
+sudo apt install ros-humble-robot-state-publisher
+```
+
+---
+
+## display.launch.py
+
+```python
+from launch import LaunchDescription
+from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+import os
+
+
+def generate_launch_description():
+
+    pkg_path = get_package_share_directory('rb10_description')
+    urdf_file = os.path.join(pkg_path, 'urdf', 'rb10.urdf')
+
+    with open(urdf_file, 'r') as infp:
+        robot_desc = infp.read()
+
+    return LaunchDescription([
+
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            output='screen',
+            parameters=[{'robot_description': robot_desc}]
+        ),
+
+        Node(
+            package='joint_state_publisher_gui',
+            executable='joint_state_publisher_gui',
+            output='screen'
+        ),
+
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            output='screen'
+        )
+    ])
+```
+
+---
+
+## 실행 방법
+
+```bash
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
+ros2 launch rb10_description display.launch.py
+```
+
+---
+
+## 실행 결과
+
+실행하면 다음 상태가 됩니다:
+
+- ✅ TF Tree 생성
+- ✅ Joint GUI 생성
+- ✅ RViz Robot Model 표시
+- ✅ FK 확인 가능
+- ✅ Joint 회전 가능
+
+---
+
+## 다음 단계 추천
+
+| 단계 | 설명 |
+|------|------|
+| Xacro 변환 | URDF를 모듈화 |
+| 실제 STL Mesh 적용 | 3D 외형 적용 |
+| MoveIt2 연동 | Motion Planning |
+| IKFast 연동 | Inverse Kinematics |
+| Gazebo Physics 추가 | 물리 시뮬레이션 |
+| Isaac Sim Import | Isaac Sim 모델 |
+| ros2_control 연동 | 하드웨어 제어 |
+| 실제 RB10 EtherCAT 제어 | 실 로봇 제어 |
+
+---
+
+## 중요한 주의사항
+
+이 URDF는 **교육용, FK/IK 학습용, TF 학습용** 기준입니다.
+
+실제 산업용 정밀 제어에는 다음이 추가로 필요합니다:
+
+- 제조사 CAD
+- 정확한 DH Parameter
+- Inertia
+- Joint Offset
+- TCP Calibration
+
+---
+
+## 요약
+
+RB10-1300E_E-Version 기준의 기본 URDF 예제를 생성했습니다.
+
+**포함 내용:**
+
+- 전체 URDF 구조
+- Joint / Link 정의
+- Origin / Axis 설정
+- RViz 실행용 launch 파일
+- ROS2 실행 방법
+- TF Tree 구성
+- FK 확인 구조
+- 향후 MoveIt / Isaac Sim 확장 방향
+
+**현재 상태로 가능한 작업:**
+
+- RViz에서 로봇 표시
+- Joint GUI로 관절 회전
+- TF 확인
+- FK 테스트
