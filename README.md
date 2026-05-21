@@ -17,15 +17,15 @@ CAD 파일(STEP)을 로봇 기술용 URDF 포맷으로 변환하는 **4가지 �
 
 | 항목 | FreeCAD + CROSS | FreeCAD → DAE + 수동 | Blender + PHOBOS | urdf-from-step |
 |---|---|---|---|---|
-| **라이선스 제약** | ❌ 없음 | ❌ 없음 | ❌ 없음 | ❌ 없음 |
+| **라이선스 <br> 제약** | ❌ 없음 | ❌ 없음 | ❌ 없음 | ❌ 없음 |
 | **메시 포맷** | DAE (권장), STL | DAE | DAE, OBJ, STL | STL |
-| **메시 품질 제어** | Tessellation 파라미터 직접 설정 | Tessellation 파라미터 직접 설정 | Blender 리토폴로지/법선 편집 가능 | OCCT 기본 tessellation |
-| **관절/링크 설정** | GUI (CROSS Workbench) | 수동 (XML 직접 편집) | GUI (PHOBOS, WYSIWYG) | 키워드 기반 자동 |
+| **메시 품질 <br> 제어** | Tessellation 파라미터 직접 설정 | Tessellation 파라미터 직접 설정 | Blender 리토폴로지/법선 편집 가능 | OCCT 기본 tessellation |
+| **관절/링크 <br> 설정** | GUI (CROSS Workbench) | 수동 (XML 직접 편집) | GUI (PHOBOS, WYSIWYG) | 키워드 기반 자동 |
 | **자동화 수준** | 중간 | 낮음 | 중간 | 높음 |
 | **ROS 버전** | ROS1 + ROS2 (XACRO) | 무관 | ROS1 + ROS2 | ROS1 |
 | **난이도** | 중간 | 높음 | 중간-높음 | 낮음 (설치만 되면) |
-| **STEP 네이티브** | ✅ FreeCAD가 직접 읽음 | ✅ FreeCAD가 직접 읽음 | ❌ STL 가공 필요 | ✅ OCCT 직접 파싱 |
-| **결과물 품질** | ⭐ 우수 | ★★★★★ (완전 제어) | ⭐⭐⭐ (메시 최상) | ★★★ (STL 한계) |
+| **STEP <br> 네이티브** | ✅ FreeCAD가 직접 읽음 | ✅ FreeCAD가 직접 읽음 | ❌ STL 가공 필요 | ✅ OCCT 직접 파싱 |
+| **결과물 <br> 품질** | ⭐ 우수 | ★★★★★ (완전 제어) | ⭐⭐⭐ (메시 최상) | ★★★ (STL 한계) |
 
 ---
 
