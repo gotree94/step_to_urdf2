@@ -19,7 +19,7 @@ CAD 파일(STEP)을 로봇 기술용 URDF 포맷으로 변환하는 **4가지 �
 |:---:|---|---|---|---|
 | **라이선스 <br> 제약** | ❌ 없음 | ❌ 없음 | ❌ 없음 | ❌ 없음 |
 | **메시 포맷** | DAE (권장), STL | DAE | DAE, OBJ, STL | STL |
-| **메시 품질 <br> 제어** | Tessellation 파라미터 직접 설정 | Tessellation 파라미터 직접 설정 | Blender 리토폴로지/법선 편집 가능 | OCCT 기본 tessellation |
+| **메시 품질 <br> 제어** | Tessellation <br> 파라미터 직접 설정 | Tessellation <br> 파라미터 직접 설정 | Blender <br> 리토폴로지/법선 편집 가능 | OCCT 기본 <br> tessellation |
 | **관절/링크 <br> 설정** | GUI (CROSS Workbench) | 수동 (XML 직접 편집) | GUI (PHOBOS, WYSIWYG) | 키워드 기반 자동 |
 | **자동화 수준** | 중간 | 낮음 | 중간 | 높음 |
 | **ROS 버전** | ROS1 + ROS2 (XACRO) | 무관 | ROS1 + ROS2 | ROS1 |
