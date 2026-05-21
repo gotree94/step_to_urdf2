@@ -62,8 +62,9 @@
 
 **3. URDF 기본 구조**
 
-URDF는 이런 형태입니다.
+* URDF는 이런 형태입니다.
 
+```XML
 <robot name="rb10">
 
     <link name="base_link"/>
@@ -83,28 +84,31 @@ URDF는 이런 형태입니다.
 </robot>
 ```
 
+
 **4. 그림에서 무엇을 읽어내는가?**
 
-예를 들어:
+* 예를 들어:
 
+```
 612.7 mm
-
+```
 ↓
-
+```XML
 <origin xyz="0 0 0.6127"/>
-
-그리고:
-
+```
+* 그리고:
+```
 파란 Z축
-
+```
 ↓
-
+```XML
 <axis xyz="0 0 1"/>
+```
 
 **5. 실제 생성 흐름**
 
-실제 개발 흐름:
-
+* 실제 개발 흐름:
+```
 CAD
  ↓
 STEP/STL 추출
@@ -118,79 +122,75 @@ RViz 검증
 MoveIt IK 설정
  ↓
 Isaac Sim Import
-
+```
 입니다.
 
 **6. ROS2에서 매우 중요**
 
-URDF가 있으면 자동으로:
-
-TF Tree
-Robot State Publisher
-RViz Robot Model
-MoveIt Planning
-IK Solver
-
-가 연결됩니다.
+* URDF가 있으면 자동으로:
+   * TF Tree
+   * Robot State Publisher
+   * RViz Robot Model
+   * MoveIt Planning
+   * IK Solver
+   * 가 연결됩니다.
 
 **7. 지금 그림 기준으로 가능한 수준**
 
-현재 정보로 만들 수 있는 것:
+   * 현재 정보로 만들 수 있는 것:
 
-기능	가능 여부
-기본 URDF	가능
-RViz 표시	가능
-FK	가능
-IK	가능
-MoveIt	가능
-Isaac Sim Import	가능
-Gazebo Physics	일부 가능
-정확한 Dynamics	추가 정보 필요
+| 기능	| 가능 여부 | 
+|:-------:| :-------:|
+| 기본 URDF	| 가능 | 
+| RViz 표시	| 가능 | 
+| FK	| 가능 | 
+| IK	| 가능 | 
+| MoveIt	| 가능 | 
+| Isaac Sim | Import	가능 | 
+| Gazebo Physics	| 일부 가능 | 
+| 정확한 Dynamics	| 추가 정보 필요 | 
 
 **8. 실제로 가장 많이 하는 방식**
 
-보통은:
-
+* 보통은:
+```
 SolidWorks
 Fusion360
 Inventor
 Creo
-
-에서:
-
+```
+* 에서:
+```
 URDF Export Plugin
-
-을 사용합니다.
-
-하지만:
-
+```
+* 을 사용합니다.
+* 하지만:
+```
 좌표계가 틀리면 전부 망가짐
-
-그래서 결국 지금 같은 좌표계 검증 작업이 가장 중요합니다.
+```
+* 그래서 결국 지금 같은 좌표계 검증 작업이 가장 중요합니다.
 
 **9. 지금 바로도 가능한 것**
 
-현재 그림 기반으로:
+* 현재 그림 기반으로:
+   * URDF
+   * Xacro
+   * ROS2 package
+   * TF Tree
+   * RViz launch
+   * MoveIt config
 
-URDF
-Xacro
-ROS2 package
-TF Tree
-RViz launch
-MoveIt config
-
-까지 생성 가능합니다.
+* 까지 생성 가능합니다.
 
 **10. 특히 중요한 부분**
 
-URDF 생성에서 가장 어려운 부분은:
-
+* URDF 생성에서 가장 어려운 부분은:
+```
 Joint Origin
 Joint Axis
-
-입니다.
-
-지금 그림은 바로 그걸 설명하는 자료입니다.
+```
+* 입니다.
+* 지금 그림은 바로 그걸 설명하는 자료입니다.
 
 ---
 
